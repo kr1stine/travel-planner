@@ -4,9 +4,13 @@
   "description": "Finds shortest flight route between two locations",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc && node ./dist/app.js",
+    "debug": "export DEBUG=* && npm run start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "node app/scripts/data.js",
+    "test-dev": "nodemon --watch . --ext ts --exec \"mocha -r ts-node/register test/**/*.test.ts\""
   },
-  "author": "",
+  "author": "Kristine Leetberg",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
