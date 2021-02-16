@@ -6,7 +6,6 @@ import cors from "cors";
 import { CommonRoutesConfig } from "./common/common.routes.config";
 import { FlightsRoutes } from "./flights/flights.routes.config";
 import debug from "debug";
-import populateData from "./scripts/populateData";
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
