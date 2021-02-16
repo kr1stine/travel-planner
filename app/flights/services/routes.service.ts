@@ -21,25 +21,54 @@ class RoutesService {
   async findAllRoutes() {
     return await routeDao.getAllRoutes();
   }
+  // Helper functions for findShortestRoute
+
+  // Find next observed origin in upcoming loop
+  // based on shortest distance
+  findShortestNextOrigin = (
+    distances: { [origin: string]: number },
+    visited: string[],
+    destination: string
+  ) =>
+    Object.keys(distances).reduce(function (res = destination, obj) {
+      return !visited.includes(obj) && (!res || distances[obj] < distances[res])
+        ? obj
+        : res;
+    });
+
+  // Constructs string representation of path
+  // e.g. TLL->AMS->LAX
+  constructPathString = (
+    parents: { [destination: string]: string },
+    destination: string,
+    origin: string
+  ) => {
+    let parent = parents[destination];
+    let path = [destination, parent];
+
+    while (parent != origin) {
+      const newParent = parents[parent];
+      path.push(newParent);
+      parent = newParent;
+    }
+
+    path = path.reverse();
+
+    let pathString = "";
+    path.forEach((p) => {
+      pathString = pathString
+        .concat(p.toUpperCase())
+        .concat(p !== destination ? "->" : "");
+    });
+    log("Found path ", pathString);
+    return pathString;
+  };
 
   // Dijkstra
   async findShortestRoute(origin: string, destination: string) {
     let distances: { [origin: string]: number } = { [destination]: Infinity };
     let parents: { [destination: string]: string } = {};
     let visited: string[] = [];
-
-    // Helper function
-    // Used to find next observed origin in upcoming loop
-    const findShortestDistance = (
-      distances: { [origin: string]: number },
-      visited: string[]
-    ) =>
-      Object.keys(distances).reduce(function (res = destination, obj) {
-        return !visited.includes(obj) &&
-          (!res || distances[obj] < distances[res])
-          ? obj
-          : res;
-      });
 
     // Fill origin data for first iteration
     let routesFromOrigin = await this.readByOrigin(origin);
@@ -51,10 +80,13 @@ class RoutesService {
       parents = { ...parents, [route.destination.iata.toLowerCase()]: origin };
     });
 
-    let currentOrigin = findShortestDistance(distances, visited);
+    let currentOrigin = this.findShortestNextOrigin(
+      distances,
+      visited,
+      destination
+    );
 
     while (currentOrigin) {
-      log("Olen tsüklis, currentOrigin ", currentOrigin);
       if (currentOrigin === destination) {
         break;
       }
@@ -69,8 +101,6 @@ class RoutesService {
         const newDistance = distances[currentOrigin] + route.distance;
 
         if (!oldDistance || newDistance < oldDistance) {
-          log("Tuvastasin, et uut d vaja ", newDistance);
-          log("Route on ", route);
           distances[routeDestinationCode] = newDistance;
           parents[routeDestinationCode] = currentOrigin;
         }
@@ -78,11 +108,16 @@ class RoutesService {
 
       visited.push(currentOrigin);
 
-      currentOrigin = findShortestDistance(distances, visited);
+      currentOrigin = this.findShortestNextOrigin(
+        distances,
+        visited,
+        destination
+      );
     }
 
-    log("Jõudsin lõppu, distance: ", distances[destination]);
-    log("Jõudsin lõppu, parent: ", parents[destination]);
+    log("Path distance: ", distances[destination]);
+
+    return this.constructPathString(parents, destination, origin);
   }
 }
 
