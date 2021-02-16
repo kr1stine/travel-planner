@@ -19,6 +19,12 @@ class RoutesService {
     return await routeDao.getRouteByOrigin(originCode);
   }
 
+  async findAllRoutes() {
+    // TODO: logic
+    //return await routeDao.findShortestRoute(origin, destination);
+    return await routeDao.getAllRoutes();
+  }
+
   async findShortestRoute(origin: string, destination: string) {
     // TODO: logic
     //return await routeDao.findShortestRoute(origin, destination);

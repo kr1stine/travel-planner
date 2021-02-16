@@ -6,6 +6,7 @@ import cors from "cors";
 import { CommonRoutesConfig } from "./common/common.routes.config";
 import { FlightsRoutes } from "./flights/flights.routes.config";
 import debug from "debug";
+import populateData from "./scripts/populateData";
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
@@ -15,6 +16,10 @@ const debugLog: debug.IDebugger = debug("app");
 
 app.use(bodyparser.json());
 app.use(cors());
+
+// TODO: use actual database
+// Init data
+populateData();
 
 routes.push(new FlightsRoutes(app));
 

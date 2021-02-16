@@ -16,6 +16,8 @@ export class FlightsRoutes extends CommonRoutesConfig {
       RoutesController.getShortestRoute
     );
 
+    this.app.route(`/route/all`).get(RoutesController.getAllRoutes);
+
     return this.app;
   }
 }

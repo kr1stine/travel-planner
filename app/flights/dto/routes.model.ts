@@ -1,7 +1,13 @@
 export interface RouteDto {
   id: number;
-  origin: string;
-  destination: string;
-  type: string;
+  origin: {
+    iata: string;
+    icao: string;
+  };
+  destination: {
+    iata: string;
+    icao: string;
+  };
+  type: "flight" | "self-transfer";
   distance: number;
 }

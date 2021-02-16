@@ -19,15 +19,25 @@ class RoutesDao {
     return RoutesDao.instance;
   }
 
+  async addRoute(route: RouteDto) {
+    this.routes.push(route);
+  }
+
   async getRouteById(routeId: number) {
     return this.routes.find((route: { id: number }) => route.id === routeId);
   }
 
   async getRouteByOrigin(originCode: string) {
     return this.routes.find(
-      (route: { origin: string }) =>
-        route.origin.toLowerCase() === originCode.toLowerCase()
+      (route: { origin: { iata: string; icao: string } }) =>
+        [
+          route.origin.iata.toLowerCase(),
+          route.origin.icao.toLowerCase(),
+        ].includes(originCode.toLowerCase())
     );
+  }
+  async getAllRoutes() {
+    return this.routes;
   }
 }
 

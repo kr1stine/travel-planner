@@ -16,6 +16,11 @@ class RoutesController {
     return RoutesController.instance;
   }
 
+  async getAllRoutes(req: express.Request, res: express.Response) {
+    const routes = await routesService.findAllRoutes();
+    res.status(200).send(routes);
+  }
+
   async getShortestRoute(req: express.Request, res: express.Response) {
     const shortestRoute = await routesService.findShortestRoute(
       req.query.origin?.toString() || "",
