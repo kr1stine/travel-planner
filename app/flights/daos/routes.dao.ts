@@ -19,12 +19,23 @@ class RoutesDao {
   }
 
   async addRoute(origin: string, route: RouteDto) {
-    this.routes[origin].push(route);
+    const originLower = origin.toLowerCase();
+    const routesfromOrigin = this.routes[originLower] || [];
+
+    // If route already in array, skip
+    if (
+      !routesfromOrigin
+        .map((r: RouteDto) => r.destination.iata)
+        .includes(route.destination.iata)
+    ) {
+      routesfromOrigin.push(route);
+      this.routes[originLower] = routesfromOrigin;
+    }
   }
 
   async getRouteByOrigin(originCode: string) {
     // TODO: if 4-letter code, convert
-    return this.routes[originCode];
+    return this.routes[originCode.toLowerCase()];
   }
 
   async getAllRoutes() {

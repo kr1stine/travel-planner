@@ -49,20 +49,24 @@ async function processLineByLine(
 const createRoutes = async () => {
   const allFlights = await flightDao.getAllFlights();
   allFlights.forEach(async (flight) => {
-    const originAirport = await airportDao.getAirportByCode(flight.origin);
-    const destinationAirport = await airportDao.getAirportByCode(
-      flight.destination
-    );
+    // TODO: iata vs icao
+    //const originAirport = await airportDao.getAirportByCode(flight.origin);
+    // const destinationAirport = await airportDao.getAirportByCode(
+    //   flight.destination
+    // );
 
     const newRoute: RouteDto = {
       destination: {
-        iata: destinationAirport?.iata || "",
-        icao: destinationAirport?.icao || "",
+        //iata: destinationAirport?.iata || "",
+        //icao: destinationAirport?.icao || "",
+        iata: flight.destination,
+        icao: flight.destination,
       },
       type: "flight",
       distance: 10,
     };
-    routesDao.addRoute(originAirport?.iata || "", newRoute);
+    //routesDao.addRoute(originAirport?.iata || "", newRoute);
+    routesDao.addRoute(flight.origin || "", newRoute);
   });
 };
 
