@@ -9,11 +9,12 @@ export class FlightsRoutes extends CommonRoutesConfig {
   }
 
   configureRoutes() {
-    this.app
-      .route(`/route/shortest`)
-      .get((req: express.Request, res: express.Response) => {
-        res.status(200).send(`Shortest path`);
-      });
+    this.app.route(`/route/shortest`).get(
+      RoutesMiddleware.validateRequiredRouteParams,
+      RoutesMiddleware.validateSameOriginAndDestination,
+      // RoutesMiddleware.validateAirportsExists,
+      RoutesController.getShortestRoute
+    );
 
     return this.app;
   }
