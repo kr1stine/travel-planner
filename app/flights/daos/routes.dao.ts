@@ -1,12 +1,11 @@
 import debug from "debug";
-
-import { RouteDto } from "../dto/routes.model";
+import { RoutesDto, RouteDto } from "../dto/routes.model";
 
 const log: debug.IDebugger = debug("app:in-memory-dao");
 
 class RoutesDao {
   private static instance: RoutesDao;
-  routes: Array<RouteDto> = [];
+  routes: RoutesDto = {};
 
   constructor() {
     log("Created new instance of RoutesDao");
@@ -19,23 +18,15 @@ class RoutesDao {
     return RoutesDao.instance;
   }
 
-  async addRoute(route: RouteDto) {
-    this.routes.push(route);
-  }
-
-  async getRouteById(routeId: number) {
-    return this.routes.find((route: { id: number }) => route.id === routeId);
+  async addRoute(origin: string, route: RouteDto) {
+    this.routes[origin].push(route);
   }
 
   async getRouteByOrigin(originCode: string) {
-    return this.routes.find(
-      (route: { origin: { iata: string; icao: string } }) =>
-        [
-          route.origin.iata.toLowerCase(),
-          route.origin.icao.toLowerCase(),
-        ].includes(originCode.toLowerCase())
-    );
+    // TODO: if 4-letter code, convert
+    return this.routes[originCode];
   }
+
   async getAllRoutes() {
     return this.routes;
   }

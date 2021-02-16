@@ -11,23 +11,18 @@ class RoutesService {
     return RoutesService.instance;
   }
 
-  async readById(id: number) {
-    return await routeDao.getRouteById(id);
-  }
-
   async readByOrigin(originCode: string) {
     return await routeDao.getRouteByOrigin(originCode);
   }
 
   async findAllRoutes() {
-    // TODO: logic
-    //return await routeDao.findShortestRoute(origin, destination);
     return await routeDao.getAllRoutes();
   }
 
   async findShortestRoute(origin: string, destination: string) {
     // TODO: logic
     //return await routeDao.findShortestRoute(origin, destination);
+
     return await routeDao.getRouteByOrigin(origin);
   }
 }

@@ -55,11 +55,6 @@ const createRoutes = async () => {
     );
 
     const newRoute: RouteDto = {
-      id: 1,
-      origin: {
-        iata: originAirport?.iata || "",
-        icao: originAirport?.icao || "",
-      },
       destination: {
         iata: destinationAirport?.iata || "",
         icao: destinationAirport?.icao || "",
@@ -67,7 +62,7 @@ const createRoutes = async () => {
       type: "flight",
       distance: 10,
     };
-    routesDao.addRoute(newRoute);
+    routesDao.addRoute(originAirport?.iata || "", newRoute);
   });
 };
 

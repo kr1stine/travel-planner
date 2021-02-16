@@ -1,9 +1,8 @@
+export interface RoutesDto {
+  [origin: string]: Array<RouteDto>;
+}
+
 export interface RouteDto {
-  id: number;
-  origin: {
-    iata: string;
-    icao: string;
-  };
   destination: {
     iata: string;
     icao: string;
