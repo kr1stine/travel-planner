@@ -27,9 +27,9 @@ class FlightDao {
     this.flights.push(flight);
   }
 
-  async getFlightById(flightId: number) {
+  async getFlightById(flightId: string) {
     return this.flights.find(
-      (flight: { id: number }) => flight.id === flightId
+      (flight: { id: string }) => flight.id === flightId
     );
   }
 

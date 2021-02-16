@@ -1,4 +1,5 @@
 import debug from "debug";
+
 import { RoutesDto, RouteDto } from "../dto/routes.model";
 
 const log: debug.IDebugger = debug("app:in-memory-dao");

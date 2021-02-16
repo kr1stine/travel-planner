@@ -19,12 +19,12 @@ class AirportsDao {
     return AirportsDao.instance;
   }
 
-  async addAirport(route: AirportDto) {
-    this.airports.push(route);
+  async addAirport(airport: AirportDto) {
+    this.airports.push(airport);
   }
 
-  async getAirportById(routeId: number) {
-    return this.airports.find((route: { id: number }) => route.id === routeId);
+  async getAirportById(routeId: string) {
+    return this.airports.find((route: { id: string }) => route.id === routeId);
   }
 
   async getAirportByCode(code: string) {

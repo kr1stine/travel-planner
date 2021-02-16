@@ -1,10 +1,12 @@
+import debug from "debug";
+import shortid from "shortid";
+
 import airportDao from "../flights/daos/airport.dao";
 import flightDao from "../flights/daos/flight.dao";
 import routesDao from "../flights/daos/routes.dao";
 import { AirportDto } from "../flights/dto/airport.model";
 import { FlightDto } from "../flights/dto/flight.model";
 import { RouteDto } from "../flights/dto/routes.model";
-import debug from "debug";
 
 const fs = require("fs");
 const readline = require("readline");
@@ -13,7 +15,7 @@ const log: debug.IDebugger = debug("app:in-memory-dao");
 const createFlight = (line: string) => {
   const splitLine = line.split(",");
   const newFlight: FlightDto = {
-    id: 1,
+    id: shortid.generate(),
     origin: splitLine[2],
     destination: splitLine[4],
   };
@@ -23,7 +25,7 @@ const createFlight = (line: string) => {
 const createAirport = (line: string) => {
   const splitLine = line.split(",");
   const newAirport: AirportDto = {
-    id: 1,
+    id: shortid.generate(),
     name: splitLine[1],
     iata: splitLine[4],
     icao: splitLine[5],
@@ -56,6 +58,7 @@ const createRoutes = async () => {
     // );
 
     const newRoute: RouteDto = {
+      id: shortid.generate(),
       destination: {
         //iata: destinationAirport?.iata || "",
         //icao: destinationAirport?.icao || "",

@@ -1,5 +1,5 @@
 export interface FlightDto {
-  id: number;
+  id: string;
   origin: string;
   destination: string;
 }

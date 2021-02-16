@@ -3,6 +3,7 @@ export interface RoutesDto {
 }
 
 export interface RouteDto {
+  id: string;
   destination: {
     iata: string;
     icao: string;

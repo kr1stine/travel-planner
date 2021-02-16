@@ -1,5 +1,5 @@
 export interface AirportDto {
-  id: number;
+  id: string;
   name: string;
   iata: string;
   icao: string;

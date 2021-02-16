@@ -122,38 +122,3 @@ class RoutesService {
 }
 
 export default RoutesService.getInstance();
-
-// track distances from the start node using a hash object
-
-// track paths using a hash object
-
-// collect visited nodes
-
-// find the nearest node
-
-// for that node:
-
-// find its child nodes
-
-// for each of those child nodes:
-
-// make sure each child node is not the start node
-
-// save the distance from the start node to the child node
-
-// if there's no recorded distance from the start node to the child node in the distances object
-
-// or if the recorded distance is shorter than the previously stored distance from the start node to the child node
-// save the distance to the object
-
-// record the path
-
-// move the current node to the visited set
-
-// move to the nearest neighbor node
-
-// when the end node is reached, reverse the recorded path back to the start node
-
-//this is the shortest path
-
-// return the shortest path & the end node's distance from the start node
