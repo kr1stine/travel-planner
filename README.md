@@ -1,7 +1,8 @@
 ## **Shortest flight path finder**
 
-Finds shortest flight path between two airports regarding geographical distance.
+Finds shortest flight path between two airports regarding geographical distance. For airports with less than 100km apart, self-transfer options are also considered.
 
+Install dependecies with `npm install`  
 Run the app with `npm start` or `npm run debug`.
 
 The app takes a few minutes to start, as heavier data processing is done at startup.

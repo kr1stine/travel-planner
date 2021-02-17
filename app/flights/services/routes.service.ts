@@ -39,27 +39,21 @@ class RoutesService {
   // Constructs string representation of path
   // e.g. TLL->AMS->LAX
   constructPathString = (
-    parents: { [destination: string]: { origin: string; type: string } },
-    destination: string,
-    origin: string
+    path: Array<{
+      origin: string;
+      destination: string;
+      type: string;
+    }>
   ) => {
-    let parent = parents[destination];
-    let path = [destination, parent.origin];
-
-    while (parent.origin != origin) {
-      const newParent = parents[parent.origin];
-      path.push(newParent.origin);
-      parent = newParent;
-    }
-
-    path = path.reverse();
-
     let pathString = "";
-    path.forEach((p) => {
+
+    for (let i = 0; i < path.length; i++) {
+      const element = path[i];
       pathString = pathString
-        .concat(p.toUpperCase())
-        .concat(p !== destination ? "->" : "");
-    });
+        .concat(element.origin.toUpperCase())
+        .concat(element.type == "flight" ? "->" : "=>")
+        .concat(i == path.length - 1 ? element.destination : "");
+    }
 
     return pathString;
   };
@@ -101,7 +95,7 @@ class RoutesService {
 
     return {
       path,
-      pathString: this.constructPathString(parents, destination, origin),
+      pathString: this.constructPathString(path),
     };
   };
 
