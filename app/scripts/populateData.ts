@@ -28,14 +28,16 @@ const createAirport = (line: string) => {
   line = line.split('"').join("");
   const splitLine = line.split(",");
   const iata = splitLine[4];
+  const icao = splitLine[5];
   const newAirport: AirportDto = {
     name: splitLine[1],
     iata,
-    icao: splitLine[5],
+    icao,
     lat: parseFloat(splitLine[6]),
     lon: parseFloat(splitLine[7]),
   };
   airportDao.addAirport(iata, newAirport);
+  airportDao.addIcaoToIataMapping(icao, iata);
 };
 
 async function processLineByLine(
@@ -113,7 +115,6 @@ const createRoutes = async () => {
         destinationAirport.lon
       ),
     };
-    //routesDao.addRoute(originAirport?.iata || "", newRoute);
     routesDao.addRoute(flight.origin || "", newRoute);
   });
 };

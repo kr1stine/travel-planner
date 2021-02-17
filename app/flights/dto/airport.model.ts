@@ -9,3 +9,7 @@ export interface AirportDto {
   lat: number;
   lon: number;
 }
+
+export interface IcaoToIata {
+  [iata: string]: string;
+}

@@ -10,15 +10,15 @@ import populateData from "./scripts/populateData";
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
-const port: Number = 3000;
+const port: string = process.env.PORT || "3000";
 const routes: Array<CommonRoutesConfig> = [];
 const debugLog: debug.IDebugger = debug("app");
 
 app.use(bodyparser.json());
 app.use(cors());
 
-// TODO: use actual database
 // Init data
+// TODO: use actual database
 populateData();
 
 routes.push(new FlightsRoutes(app));

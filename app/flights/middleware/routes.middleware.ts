@@ -30,7 +30,10 @@ class RoutesMiddleware {
     res: express.Response,
     next: express.NextFunction
   ) {
-    if (req.query.origin !== req.query.destination) {
+    if (
+      req.query.origin?.toString().toLowerCase() !==
+      req.query.destination?.toString().toLowerCase()
+    ) {
       next();
     } else {
       res.status(400).send({

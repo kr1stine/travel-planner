@@ -115,7 +115,7 @@ class RoutesService {
       let visited: string[] = [];
 
       // Fill origin data for first iteration
-      let routesFromOrigin = await this.readByOrigin(origin);
+      let routesFromOrigin = (await this.readByOrigin(origin)) || [];
       routesFromOrigin.forEach((route: RouteDto) => {
         distances = {
           ...distances,
@@ -171,7 +171,7 @@ class RoutesService {
       log("Path distance: ", distances[destination]);
 
       if (distances[destination] === Infinity) {
-        reject("Path not found");
+        reject({ error: "Path not found" });
       } else {
         resolve(this.constructPathObject(parents, destination, origin));
       }

@@ -1,0 +1,57 @@
+## **Shortest flight path finder**
+
+Finds shortest flight path between two airports regarding geographical distance.
+
+Run the app with `npm start` or `npm run debug`.
+
+The app takes a few minutes to start, as heavier data processing is done at startup.
+
+Available endpoints:
+
+## **Get route**
+
+Returns shortest route info between two given airports.
+
+- **URL**
+
+  /route/shortest?origin={origin}&destination={destination}
+
+- **Method:**
+
+  `GET`
+
+- **URL Params**
+
+  **Required:**
+
+  `origin=[string]`
+  `destination=[string]`
+
+  Both can be either IATA or ICAO codes.
+
+- **Data Params**
+
+  None
+
+- **Success Response:**
+
+  - **Code:** 200 <br />
+    **Content:** `{ "path": [ { "origin": "TLL", "destination": "HEL", "type": "flight" } ], "pathString": "TLL->HEL" }`
+
+- **Error Response:**
+
+  - **Code:** 404 NOT FOUND <br />
+    **Content:** `{ error : "Path not found" }`
+
+- **Sample Call:**
+
+  ```javascript
+  $.ajax({
+    url: "/route/shortest?origin=tll&destination=lax",
+    dataType: "json",
+    type: "GET",
+    success: function (r) {
+      console.log(r);
+    },
+  });
+  ```

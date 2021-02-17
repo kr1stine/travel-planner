@@ -1,4 +1,5 @@
 import debug from "debug";
+import { IcaoToIata } from "../dto/airport.model";
 import { AirportsDto, AirportDto } from "../dto/airport.model";
 
 const log: debug.IDebugger = debug("app:in-memory-dao");
@@ -6,6 +7,7 @@ const log: debug.IDebugger = debug("app:in-memory-dao");
 class AirportsDao {
   private static instance: AirportsDao;
   airports: AirportsDto = {};
+  icaoToIata: IcaoToIata = {};
 
   constructor() {
     log("Created new instance of RoutesDao");
@@ -25,6 +27,17 @@ class AirportsDao {
   async addAirport(iata: string, airport: AirportDto) {
     iata = iata.toLowerCase();
     this.airports[iata] = airport;
+  }
+
+  async addIcaoToIataMapping(icao: string, iata: string) {
+    icao = icao.toLowerCase();
+    iata = iata.toLowerCase();
+    this.icaoToIata[icao] = iata;
+  }
+
+  async getIataByIcao(icao: string) {
+    icao = icao.toLowerCase();
+    return this.icaoToIata[icao];
   }
 
   async getAirportByCode(code: string) {
