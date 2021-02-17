@@ -8,6 +8,8 @@ App will become available at `localhost:3000`.
 
 The app takes a few minutes to start, as heavier data processing is done at startup.
 
+Data is fetched from OpenFlights (https://openflights.org/data.html)
+
 Available endpoints:
 
 ## **Get route**
