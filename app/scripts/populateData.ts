@@ -53,7 +53,9 @@ async function processLineByLine(
   });
 }
 const createSelfTransferRoutes = async () => {
-  const allAirports = await Object.keys(airportDao.getAllAirports());
+  const allAirports = Object.keys(await airportDao.getAllAirports());
+
+  // TODO: improve efficiency
   for (let i = 0; i < allAirports.length; i++) {
     const airport1 = await airportDao.getAirportByCode(allAirports[i]);
     for (let j = i; j < allAirports.length; j++) {
@@ -81,6 +83,10 @@ const createSelfTransferRoutes = async () => {
 };
 
 const createRoutes = async () => {
+  // Non-flight routes
+  createSelfTransferRoutes();
+
+  // Flight routes
   const allFlights = await flightDao.getAllFlights();
   allFlights.forEach(async (flight) => {
     // TODO: iata vs icao
@@ -110,8 +116,6 @@ const createRoutes = async () => {
     //routesDao.addRoute(originAirport?.iata || "", newRoute);
     routesDao.addRoute(flight.origin || "", newRoute);
   });
-
-  createSelfTransferRoutes();
 };
 
 const populateData = async () => {

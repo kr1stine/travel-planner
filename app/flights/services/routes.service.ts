@@ -39,16 +39,16 @@ class RoutesService {
   // Constructs string representation of path
   // e.g. TLL->AMS->LAX
   constructPathString = (
-    parents: { [destination: string]: string },
+    parents: { [destination: string]: { origin: string; type: string } },
     destination: string,
     origin: string
   ) => {
     let parent = parents[destination];
-    let path = [destination, parent];
+    let path = [destination, parent.origin];
 
-    while (parent != origin) {
-      const newParent = parents[parent];
-      path.push(newParent);
+    while (parent.origin != origin) {
+      const newParent = parents[parent.origin];
+      path.push(newParent.origin);
       parent = newParent;
     }
 
@@ -60,7 +60,7 @@ class RoutesService {
         .concat(p.toUpperCase())
         .concat(p !== destination ? "->" : "");
     });
-    log("Found path ", pathString);
+
     return pathString;
   };
 
@@ -72,24 +72,26 @@ class RoutesService {
   //  ],
   //}
   constructPathObject = (
-    parents: { [destination: string]: string },
+    parents: { [destination: string]: { origin: string; type: string } },
     destination: string,
     origin: string
   ) => {
     let parent = parents[destination];
     let path = [
       {
-        origin: parent.toUpperCase(),
+        origin: parent.origin.toUpperCase(),
         destination: destination.toUpperCase(),
+        type: parent.type,
       },
     ];
     let newDestination = parent;
 
-    while (parent != origin) {
-      const newParent = parents[parent];
+    while (parent.origin != origin) {
+      const newParent = parents[parent.origin];
       path.push({
-        origin: newParent.toUpperCase(),
-        destination: newDestination.toUpperCase(),
+        origin: newParent.origin.toUpperCase(),
+        destination: newDestination.origin.toUpperCase(),
+        type: newParent.type,
       });
       parent = newParent;
       newDestination = newParent;
@@ -107,7 +109,9 @@ class RoutesService {
   async findShortestRoute(origin: string, destination: string) {
     return new Promise(async (resolve, reject) => {
       let distances: { [origin: string]: number } = { [destination]: Infinity };
-      let parents: { [destination: string]: string } = {};
+      let parents: {
+        [destination: string]: { origin: string; type: string };
+      } = {};
       let visited: string[] = [];
 
       // Fill origin data for first iteration
@@ -119,7 +123,10 @@ class RoutesService {
         };
         parents = {
           ...parents,
-          [route.destination.iata.toLowerCase()]: origin,
+          [route.destination.iata.toLowerCase()]: {
+            origin: origin,
+            type: route.type,
+          },
         };
       });
 
@@ -145,7 +152,10 @@ class RoutesService {
 
           if (!oldDistance || newDistance < oldDistance) {
             distances[routeDestinationCode] = newDistance;
-            parents[routeDestinationCode] = currentOrigin;
+            parents[routeDestinationCode] = {
+              origin: currentOrigin,
+              type: route.type,
+            };
           }
         });
 
