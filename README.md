@@ -4,6 +4,7 @@ Finds shortest flight path between two airports regarding geographical distance.
 
 Install dependecies with `npm install`  
 Run the app with `npm start` or `npm run debug`.
+App will become available at `localhost:3000`.
 
 The app takes a few minutes to start, as heavier data processing is done at startup.
 
