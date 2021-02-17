@@ -1,8 +1,11 @@
+export interface AirportsDto {
+  [iata: string]: AirportDto;
+}
+
 export interface AirportDto {
-  id: string;
   name: string;
   iata: string;
   icao: string;
-  latitude: number;
-  longitude: number;
+  lat: number;
+  lon: number;
 }

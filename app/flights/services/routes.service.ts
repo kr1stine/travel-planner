@@ -90,7 +90,7 @@ class RoutesService {
       if (currentOrigin === destination) {
         break;
       }
-      const routesFromOrigin = await this.readByOrigin(currentOrigin);
+      const routesFromOrigin = (await this.readByOrigin(currentOrigin)) || [];
 
       routesFromOrigin.forEach((route: RouteDto) => {
         const routeDestinationCode = route.destination.iata.toLowerCase();

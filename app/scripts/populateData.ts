@@ -1,5 +1,7 @@
 import debug from "debug";
+import { resolve } from "path";
 import shortid from "shortid";
+import { calculateDistance } from "../common/utils";
 
 import airportDao from "../flights/daos/airport.dao";
 import flightDao from "../flights/daos/flight.dao";
@@ -23,39 +25,44 @@ const createFlight = (line: string) => {
 };
 
 const createAirport = (line: string) => {
+  line = line.split('"').join("");
   const splitLine = line.split(",");
+  const iata = splitLine[4];
   const newAirport: AirportDto = {
-    id: shortid.generate(),
     name: splitLine[1],
-    iata: splitLine[4],
+    iata,
     icao: splitLine[5],
-    latitude: parseFloat(splitLine[6]),
-    longitude: parseFloat(splitLine[7]),
+    lat: parseFloat(splitLine[6]),
+    lon: parseFloat(splitLine[7]),
   };
-  airportDao.addAirport(newAirport);
+  airportDao.addAirport(iata, newAirport);
 };
 
 async function processLineByLine(
   filename: string,
   handleLine: (line: string) => void
 ) {
-  var rd = readline.createInterface({
-    input: fs.createReadStream(filename),
-    console: false,
-  });
+  return new Promise((resolve) => {
+    var rd = readline.createInterface({
+      input: fs.createReadStream(filename),
+      console: false,
+    });
 
-  rd.on("line", handleLine);
-  rd.on("close", createRoutes);
+    rd.on("line", handleLine);
+    rd.on("close", () => resolve(true));
+  });
 }
 
 const createRoutes = async () => {
   const allFlights = await flightDao.getAllFlights();
   allFlights.forEach(async (flight) => {
     // TODO: iata vs icao
-    //const originAirport = await airportDao.getAirportByCode(flight.origin);
-    // const destinationAirport = await airportDao.getAirportByCode(
-    //   flight.destination
-    // );
+    const originAirport = await airportDao.getAirportByCode(flight.origin);
+    const destinationAirport = await airportDao.getAirportByCode(
+      flight.destination
+    );
+
+    if (!originAirport || !destinationAirport) return;
 
     const newRoute: RouteDto = {
       id: shortid.generate(),
@@ -66,7 +73,12 @@ const createRoutes = async () => {
         icao: flight.destination,
       },
       type: "flight",
-      distance: 10,
+      distance: calculateDistance(
+        originAirport.lat,
+        originAirport.lon,
+        destinationAirport.lat,
+        destinationAirport.lon
+      ),
     };
     //routesDao.addRoute(originAirport?.iata || "", newRoute);
     routesDao.addRoute(flight.origin || "", newRoute);
@@ -74,8 +86,10 @@ const createRoutes = async () => {
 };
 
 const populateData = async () => {
-  processLineByLine(`data/routes.dat`, createFlight);
-  processLineByLine(`data/airports.dat`, createAirport);
+  Promise.all([
+    processLineByLine(`data/routes.dat`, createFlight),
+    processLineByLine(`data/airports.dat`, createAirport),
+  ]).then((_) => createRoutes());
 };
 
 export default populateData;

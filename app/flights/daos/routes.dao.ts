@@ -22,7 +22,6 @@ class RoutesDao {
   async addRoute(origin: string, route: RouteDto) {
     const originLower = origin.toLowerCase();
     const routesfromOrigin = this.routes[originLower] || [];
-
     // If route already in array, skip
     if (
       !routesfromOrigin

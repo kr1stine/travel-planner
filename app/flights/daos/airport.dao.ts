@@ -1,12 +1,11 @@
 import debug from "debug";
-
-import { AirportDto } from "../dto/airport.model";
+import { AirportsDto, AirportDto } from "../dto/airport.model";
 
 const log: debug.IDebugger = debug("app:in-memory-dao");
 
 class AirportsDao {
   private static instance: AirportsDao;
-  airports: Array<AirportDto> = [];
+  airports: AirportsDto = {};
 
   constructor() {
     log("Created new instance of RoutesDao");
@@ -19,20 +18,20 @@ class AirportsDao {
     return AirportsDao.instance;
   }
 
-  async addAirport(airport: AirportDto) {
-    this.airports.push(airport);
-  }
-
-  async getAirportById(routeId: string) {
-    return this.airports.find((route: { id: string }) => route.id === routeId);
+  async addAirport(iata: string, airport: AirportDto) {
+    iata = iata.toLowerCase();
+    this.airports[iata] = airport;
   }
 
   async getAirportByCode(code: string) {
-    return this.airports.find((airport: { iata: string; icao: string }) =>
-      [airport.iata.toLowerCase(), airport.icao.toLowerCase()].includes(
-        code.toLowerCase()
-      )
-    );
+    code = code.toLowerCase();
+    return this.airports[code];
+
+    // return this.airports.find((airport: { iata: string; icao: string }) =>
+    //   [airport.iata.toLowerCase(), airport.icao.toLowerCase()].includes(
+    //     code.toLowerCase()
+    //   )
+    // );
   }
 }
 

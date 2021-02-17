@@ -23,8 +23,8 @@ class RoutesController {
 
   async getShortestRoute(req: express.Request, res: express.Response) {
     const shortestRoute = await routesService.findShortestRoute(
-      req.query.origin?.toString() || "",
-      req.query.destination?.toString() || ""
+      req.query.origin?.toString().toLowerCase() || "",
+      req.query.destination?.toString().toLowerCase() || ""
     );
     res.status(200).send(shortestRoute);
   }
