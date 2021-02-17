@@ -25,6 +25,7 @@ Returns shortest route info between two given airports.
   **Required:**
 
   `origin=[string]`
+
   `destination=[string]`
 
   Both can be either IATA or ICAO codes.
@@ -42,6 +43,16 @@ Returns shortest route info between two given airports.
 
   - **Code:** 404 NOT FOUND <br />
     **Content:** `{ error : "Path not found" }`
+
+  OR
+
+  - **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "Missing required parameters: origin and/or destination" }`
+
+  OR
+
+  - **Code:** 400 BAD REQUEST <br />
+    **Content:** `{ error : "Cannot find route between same origin and destination" }`
 
 - **Sample Call:**
 

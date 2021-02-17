@@ -105,10 +105,12 @@ class RoutesService {
     };
   };
 
-  // Dijkstra
+  // Dijkstra algorithm
   async findShortestRoute(origin: string, destination: string) {
     return new Promise(async (resolve, reject) => {
+      // Keeps track of known distances from origin to each node
       let distances: { [origin: string]: number } = { [destination]: Infinity };
+      // For each node, keeps track of their preceding node in the shortest path
       let parents: {
         [destination: string]: { origin: string; type: string };
       } = {};
@@ -136,7 +138,10 @@ class RoutesService {
         destination
       );
 
+      // Main loop
       while (currentOrigin) {
+        // The nature of the algorithm determines that when we reach the destination,
+        // we have found the shortest path
         if (currentOrigin === destination) {
           break;
         }

@@ -41,29 +41,6 @@ class RoutesMiddleware {
       });
     }
   }
-
-  async validateAirportsExists(
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) {
-    const origin = req.query.origin;
-    const destination = req.query.destination;
-
-    let airportsNotFound: any[] = [];
-    [origin, destination].forEach(async (airport) => {
-      const dataPoint = await routesService.readByOrigin(req.params.origin);
-      if (dataPoint) {
-        next();
-      } else {
-        airportsNotFound.push(airport);
-      }
-    });
-
-    if (airportsNotFound) {
-      res.status(404).send({ error: `Airport ${req.params.origin} not found` });
-    }
-  }
 }
 
 export default RoutesMiddleware.getInstance();

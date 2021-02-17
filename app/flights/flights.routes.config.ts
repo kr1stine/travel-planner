@@ -9,12 +9,13 @@ export class FlightsRoutes extends CommonRoutesConfig {
   }
 
   configureRoutes() {
-    this.app.route(`/route/shortest`).get(
-      RoutesMiddleware.validateRequiredRouteParams,
-      RoutesMiddleware.validateSameOriginAndDestination,
-      // RoutesMiddleware.validateAirportsExists,
-      RoutesController.getShortestRoute
-    );
+    this.app
+      .route(`/route/shortest`)
+      .get(
+        RoutesMiddleware.validateRequiredRouteParams,
+        RoutesMiddleware.validateSameOriginAndDestination,
+        RoutesController.getShortestRoute
+      );
 
     this.app.route(`/route/all`).get(RoutesController.getAllRoutes);
 

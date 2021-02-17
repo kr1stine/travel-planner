@@ -1,4 +1,5 @@
 import debug from "debug";
+
 import { IcaoToIata } from "../dto/airport.model";
 import { AirportsDto, AirportDto } from "../dto/airport.model";
 
@@ -43,12 +44,6 @@ class AirportsDao {
   async getAirportByCode(code: string) {
     code = code.toLowerCase();
     return this.airports[code];
-
-    // return this.airports.find((airport: { iata: string; icao: string }) =>
-    //   [airport.iata.toLowerCase(), airport.icao.toLowerCase()].includes(
-    //     code.toLowerCase()
-    //   )
-    // );
   }
 }
 
