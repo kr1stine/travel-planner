@@ -18,6 +18,10 @@ class AirportsDao {
     return AirportsDao.instance;
   }
 
+  async getAllAirports() {
+    return this.airports;
+  }
+
   async addAirport(iata: string, airport: AirportDto) {
     iata = iata.toLowerCase();
     this.airports[iata] = airport;

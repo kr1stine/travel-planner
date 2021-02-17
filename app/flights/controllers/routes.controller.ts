@@ -22,11 +22,19 @@ class RoutesController {
   }
 
   async getShortestRoute(req: express.Request, res: express.Response) {
-    const shortestRoute = await routesService.findShortestRoute(
-      req.query.origin?.toString().toLowerCase() || "",
-      req.query.destination?.toString().toLowerCase() || ""
-    );
-    res.status(200).send(shortestRoute);
+    routesService
+      .findShortestRoute(
+        req.query.origin?.toString().toLowerCase() || "",
+        req.query.destination?.toString().toLowerCase() || ""
+      )
+      .then(
+        (value) => {
+          res.status(200).send(value);
+        },
+        (reason) => {
+          res.status(500).send(reason);
+        }
+      );
   }
 }
 

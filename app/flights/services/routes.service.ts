@@ -105,58 +105,67 @@ class RoutesService {
 
   // Dijkstra
   async findShortestRoute(origin: string, destination: string) {
-    let distances: { [origin: string]: number } = { [destination]: Infinity };
-    let parents: { [destination: string]: string } = {};
-    let visited: string[] = [];
+    return new Promise(async (resolve, reject) => {
+      let distances: { [origin: string]: number } = { [destination]: Infinity };
+      let parents: { [destination: string]: string } = {};
+      let visited: string[] = [];
 
-    // Fill origin data for first iteration
-    let routesFromOrigin = await this.readByOrigin(origin);
-    routesFromOrigin.forEach((route: RouteDto) => {
-      distances = {
-        ...distances,
-        [route.destination.iata.toLowerCase()]: route.distance,
-      };
-      parents = { ...parents, [route.destination.iata.toLowerCase()]: origin };
-    });
-
-    let currentOrigin = this.findShortestNextOrigin(
-      distances,
-      visited,
-      destination
-    );
-
-    while (currentOrigin) {
-      if (currentOrigin === destination) {
-        break;
-      }
-      const routesFromOrigin = (await this.readByOrigin(currentOrigin)) || [];
-
+      // Fill origin data for first iteration
+      let routesFromOrigin = await this.readByOrigin(origin);
       routesFromOrigin.forEach((route: RouteDto) => {
-        const routeDestinationCode = route.destination.iata.toLowerCase();
-        if (routeDestinationCode === currentOrigin) {
-          return;
-        }
-        const oldDistance = distances[routeDestinationCode];
-        const newDistance = distances[currentOrigin] + route.distance;
-
-        if (!oldDistance || newDistance < oldDistance) {
-          distances[routeDestinationCode] = newDistance;
-          parents[routeDestinationCode] = currentOrigin;
-        }
+        distances = {
+          ...distances,
+          [route.destination.iata.toLowerCase()]: route.distance,
+        };
+        parents = {
+          ...parents,
+          [route.destination.iata.toLowerCase()]: origin,
+        };
       });
 
-      visited.push(currentOrigin);
-
-      currentOrigin = this.findShortestNextOrigin(
+      let currentOrigin = this.findShortestNextOrigin(
         distances,
         visited,
         destination
       );
-    }
 
-    log("Path distance: ", distances[destination]);
+      while (currentOrigin) {
+        if (currentOrigin === destination) {
+          break;
+        }
+        const routesFromOrigin = (await this.readByOrigin(currentOrigin)) || [];
 
-    return this.constructPathObject(parents, destination, origin);
+        routesFromOrigin.forEach((route: RouteDto) => {
+          const routeDestinationCode = route.destination.iata.toLowerCase();
+          if (routeDestinationCode === currentOrigin) {
+            return;
+          }
+          const oldDistance = distances[routeDestinationCode];
+          const newDistance = distances[currentOrigin] + route.distance;
+
+          if (!oldDistance || newDistance < oldDistance) {
+            distances[routeDestinationCode] = newDistance;
+            parents[routeDestinationCode] = currentOrigin;
+          }
+        });
+
+        visited.push(currentOrigin);
+
+        currentOrigin = this.findShortestNextOrigin(
+          distances,
+          visited,
+          destination
+        );
+      }
+
+      log("Path distance: ", distances[destination]);
+
+      if (distances[destination] === Infinity) {
+        reject("Path not found");
+      } else {
+        resolve(this.constructPathObject(parents, destination, origin));
+      }
+    });
   }
 }
 
