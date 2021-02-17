@@ -64,6 +64,45 @@ class RoutesService {
     return pathString;
   };
 
+  // Constructs object representation of path
+  // e.g. {
+  //  route: [
+  //    { origin: "TLL", destination: "ARN", type: "flight" },
+  //    { origin: "ARN", destination: "LAX", type: "flight" },
+  //  ],
+  //}
+  constructPathObject = (
+    parents: { [destination: string]: string },
+    destination: string,
+    origin: string
+  ) => {
+    let parent = parents[destination];
+    let path = [
+      {
+        origin: parent.toUpperCase(),
+        destination: destination.toUpperCase(),
+      },
+    ];
+    let newDestination = parent;
+
+    while (parent != origin) {
+      const newParent = parents[parent];
+      path.push({
+        origin: newParent.toUpperCase(),
+        destination: newDestination.toUpperCase(),
+      });
+      parent = newParent;
+      newDestination = newParent;
+    }
+
+    path = path.reverse();
+
+    return {
+      path,
+      pathString: this.constructPathString(parents, destination, origin),
+    };
+  };
+
   // Dijkstra
   async findShortestRoute(origin: string, destination: string) {
     let distances: { [origin: string]: number } = { [destination]: Infinity };
@@ -117,7 +156,7 @@ class RoutesService {
 
     log("Path distance: ", distances[destination]);
 
-    return this.constructPathString(parents, destination, origin);
+    return this.constructPathObject(parents, destination, origin);
   }
 }
 

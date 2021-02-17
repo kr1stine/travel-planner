@@ -2,37 +2,73 @@ import app from "../../app/app";
 import { agent as request } from "supertest";
 import { expect } from "chai";
 
-it(`should GET /flights/shortest?origin=TLL&destination=HEL`, async function () {
+it(`should GET /route/shortest?origin=TLL&destination=HEL`, async function () {
   let origin = "TLL";
   let destination = "HEL";
 
   let routeBody = {
-    route: [{ origin: "TLL", destination: "HEL", type: "flight" }],
+    path: [{ origin: "TLL", destination: "HEL", type: "flight" }],
   };
   const res = await request(app)
-    .get(`/flights/best?origin=${origin}&destination=${destination}`)
+    .get(`/route/shortest?origin=${origin}&destination=${destination}`)
     .send();
   expect(res.status).to.equal(200);
   expect(res.body).not.to.be.empty;
   expect(res.body).to.be.an("object");
-  expect(res.body.route).to.be.equals(routeBody.route);
+  expect(res.body.path).to.be.equals(routeBody.path);
 });
 
-it(`should GET /flights/shortest?origin=TLL&destination=LAX`, async function () {
+it(`should GET /route/shortest?origin=tll&destination=hel`, async function () {
+  let origin = "TLL";
+  let destination = "HEL";
+
+  let routeBody = {
+    path: [{ origin: "TLL", destination: "HEL", type: "flight" }],
+  };
+  const res = await request(app)
+    .get(`/route/shortest?origin=${origin}&destination=${destination}`)
+    .send();
+  expect(res.status).to.equal(200);
+  expect(res.body).not.to.be.empty;
+  expect(res.body).to.be.an("object");
+  expect(res.body.path).to.be.equals(routeBody.path);
+});
+
+it(`should GET /route/shortest?origin=TLL&destination=LAX`, async function () {
   let origin = "TLL";
   let destination = "LAX";
 
   let routeBody = {
-    route: [
-      { origin: "TLL", destination: "HEL", type: "flight" },
-      { origin: "HEL", destination: "LAX", type: "flight" },
+    path: [
+      { origin: "TLL", destination: "ARN", type: "flight" },
+      { origin: "ARN", destination: "LAX", type: "flight" },
     ],
   };
   const res = await request(app)
-    .get(`/flights/best?origin=${origin}&destination=${destination}`)
+    .get(`/route/shortest?origin=${origin}&destination=${destination}`)
     .send();
   expect(res.status).to.equal(200);
   expect(res.body).not.to.be.empty;
   expect(res.body).to.be.an("object");
-  expect(res.body.route).to.be.equals(routeBody.route);
+  expect(res.body.path).to.be.equals(routeBody.path);
+});
+
+it(`should GET /route/shortest?origin=TLL&destination=JFK`, async function () {
+  let origin = "TLL";
+  let destination = "JFK";
+
+  let routeBody = {
+    path: [
+      { origin: "TLL", destination: "TRD", type: "flight" },
+      { origin: "TRD", destination: "KEF", type: "flight" },
+      { origin: "KEF", destination: "JFK", type: "flight" },
+    ],
+  };
+  const res = await request(app)
+    .get(`/route/shortest?origin=${origin}&destination=${destination}`)
+    .send();
+  expect(res.status).to.equal(200);
+  expect(res.body).not.to.be.empty;
+  expect(res.body).to.be.an("object");
+  expect(res.body.path).to.be.equals(routeBody.path);
 });
